@@ -1,77 +1,97 @@
 <!DOCTYPE html>
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vizsgaremek</title>
-    <link rel="stylesheet" href="felhasznkezeles.css">
-    <body>
-        <!-- Oldalsó menü -->
-        <div class="sidebar">
-            <h2>Admin Menü</h2>
-            <ul>
-                <li><a href="admin.html">Főoldal</a></li>
-                <li><a href="felhasznkezeles.html">Felhasználók kezelése</a></li>
-                <li><a href="menukez.html">Menük kezelése</a></li>
-                <li><a href="#">Beállítások</a></li>
-                <li><a href="index.html">Kijelentkezés</a></li>
-            </ul>
-        </div>
-        <div class="content">
-            <div class="login-container">
-                <div class="login_title">
-                    <span>Felhasználók kezelése</span>
-                </div>
-               
-                <div class="login_add">
-                    <span>Új Felhasználó hozzáadása</span>
-                    <br>
-                    <br>
+    <title>Felhasználók kezelése</title>
+    <link rel="stylesheet" href="http://localhost/vizsgarem/style/felhasznkezeles.css">
+</head>
+<body>
+    <!-- Oldalsó menü -->
+    <div class="sidebar">
+        <h2>Admin Menü</h2>
+        <ul>
+            <li><a href="admin.html">Főoldal</a></li>
+            <li><a href="felhasznkezeles.html">Felhasználók kezelése</a></li>
+            <li><a href="menukez.html">Menük kezelése</a></li>
+            <li><a href="#">Beállítások</a></li>
+            <li><a href="index.html">Kijelentkezés</a></li>
+        </ul>
+    </div>
+
+    <!-- Tartalom -->
+    <div class="content">
+        <div class="login-container">
+            <div class="login_title">
+                <span>Felhasználók kezelése</span>
+            </div>
+
+            <!-- Új felhasználó hozzáadása -->
+            <div class="login_add">
+                <span>Új Felhasználó hozzáadása</span>
+                <br><br>
+                <form action="http://localhost/vizsgarem/src/controller.php?action=addUser" method="POST">
                     <div class="input-wrapper">
                         <label for="nev" class="input-label">Név:</label>
-                        <input type="text" id="nev" class="input-field" required>
-                        <i class="fa-regular fa-nev icon"></i>
+                        <input type="text" id="nev" name="nev" class="input-field" required>
                     </div>
                     <br>
                     <div class="input-wrapper">
                         <label for="email" class="input-label">E-mail:</label>
-                        <input type="text" id="email" class="input-field" required>
-                        <i class="fa-regular fa-emaul icon"></i>
+                        <input type="email" id="email" name="email" class="input-field" required>
                     </div>
                     <br>
                     <div class="input-wrapper">
                         <label for="user" class="input-label">Felhasználó név:</label>
-                        <input type="text" id="user" class="input-field" required>
-                        <i class="fa-regular fa-user icon"></i>
+                        <input type="text" id="user" name="username" class="input-field" required>
                     </div>
                     <br>
                     <div class="input-wrapper">
                         <label for="pass" class="input-label">Jelszó:</label>
-                        <input type="password" id="pass" class="input-field" required>
-                        <i class="fa-solid fa-lock icon"></i>
+                        <input type="password" id="pass" name="password" class="input-field" required>
                     </div>
                     <br>
                     <div class="input-wrapper">
-                        <input type="submit" value="Hozzáad" class="input-submit">
+                        <button type="submit" class="input-submit">Felhasználó hozzáadása</button>
                     </div>
-                </div>
-                <br>
-                <div class="login_show">
-                    <span>Felhasználók a honlapon</span>
-                    <br>
-                    <br>
-                    <ul>
-                        <li>Név:</li>
-                        <li>E-mail:</li>
-                        <li>Felhasználó név:</li>
-                        <li>Jelszó:</li>
-                        <li>Feltöltött képek száma:</li>
-                        <li>Lezárult?: (igen/nem)</li>
-                        <li><input type="submit" value="Hozzáférés letiltása" class="input-submit"></li> <!-- Bejelentkezés letíltása -->
-                        <li><input type="submit" value="Törlés" class="input-submit"></li> <!-- végleges törlés-->
-                    </ul>
-                    </div>
-                </div>
-            <script src="JS/felhasznkezeles.js"></script>
-    </body>
-    
+                </form>
+            </div>
+            <br>
+
+            <!-- Felhasználók listája -->
+            <div class="login_show">
+                <span>Felhasználók a honlapon</span>
+                <br><br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Név:</th>
+                            <th>E-mail:</th>
+                            <th>Felhasználó név:</th>
+                            <th>Jelszó:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        require_once '../src/controller.php'; // Hivatkozás a controller.php fájlra
+                        $controller = new Controller();
+                        $users = $controller->getUsers(); // Felhasználók lekérése
+
+                        foreach ($users as $user): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($user['nev']) ?></td>
+                                <td><?= htmlspecialchars($user['email']) ?></td>
+                                <td><?= htmlspecialchars($user['username']) ?></td>
+                                <td><?= htmlspecialchars($user['password']) ?></td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://localhost/vizsgarem/JS/felhasznkezeles.js"></script>
+</body>
 </html>

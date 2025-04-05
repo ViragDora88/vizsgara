@@ -46,24 +46,76 @@ class Controller {
 
     public function getUsers() {
         header('Content-Type: application/json');
-        $users = $this->users->getUsers();
-        echo json_encode($users);
+        try {
+            // Feltételezve, hogy a $this->users->getUsers() lekéri az adatokat az adatbázisból
+            $users = $this->users->getUsers();
+            echo json_encode($users); // JSON formátumban visszaküldjük az adatokat
+        } catch (Exception $e) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(["message" => "Hiba történt a felhasználók lekérésekor: " . $e->getMessage()]);
+        }
     }
 
     public function addUsers() {
         header('Content-Type: application/json');
         $data = json_decode(file_get_contents("php://input"));
-
-        if (!$data || !isset($data->nev) || !isset($data->pass)) {
+    
+        // Ellenőrzés hiányzó adatokra
+        if (!$data || !isset($data->username) || !isset($data->password) || !isset($data->email)) {
             http_response_code(400); // Bad Request
             echo json_encode(["message" => "Hiányzó adatok"]);
             return;
         }
-
-        $this->users->addUser($data->nev, $data->pass);
-
-        http_response_code(201); // Created
-        echo json_encode(["message" => "Felhasználó létrehozva"]);
+    
+        try {
+            // Felhasználó hozzáadása
+            $this->users->addUser($data->username, $data->password, $data->email);
+            http_response_code(201); // Created
+            echo json_encode(["message" => "Felhasználó létrehozva"]);
+        } catch (Exception $e) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(["message" => "Hiba történt: " . $e->getMessage()]);
+        }
+    }
+    // A felhasználó törlése
+    public function deleteUser() {
+        header('Content-Type: application/json');
+        $data = json_decode(file_get_contents("php://input"));
+    
+        if (!isset($data->id)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Hiányzó felhasználó ID"]);
+            return;
+        }
+    
+        $result = $this->users->deleteUserById($data->id);
+    
+        if ($result) {
+            echo json_encode(["message" => "Felhasználó törölve."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Nem sikerült törölni a felhasználót."]);
+        }
+    }
+    // A felhasználó letiltása
+    public function lockUser() {
+        header('Content-Type: application/json');
+        $data = json_decode(file_get_contents("php://input"));
+    
+        if (!isset($data->id)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Hiányzó felhasználó ID"]);
+            return;
+        }
+    
+        $result = $this->users->lockUserById($data->id);
+    
+        if ($result) {
+            echo json_encode(["message" => "Felhasználó letiltva."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Nem sikerült letiltani a felhasználót."]);
+        }
     }
 }
 
@@ -82,6 +134,13 @@ if (isset($_GET['action'])) {
         case 'addUsers':
             $controller->addUsers();
             break;
+        case 'deleteUser':
+            $controller->deleteUser();
+            break;
+        case 'lockUser':
+            $controller->lockUser();
+            break;
+
         default:
             http_response_code(400); // Bad Request
             echo json_encode(["message" => "Ismeretlen művelet"]);
@@ -91,5 +150,6 @@ if (isset($_GET['action'])) {
     http_response_code(400); // Bad Request
     echo json_encode(["message" => "Nincs megadva művelet"]);
 }
+
 
 ?>

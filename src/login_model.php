@@ -10,17 +10,21 @@ class login_model {
 
     // Felhasználók lekérése
     public function getUsers() {
-        $query = "SELECT * FROM users";  // Az SQL lekérdezés
-        $stmt = $this->db->query($query);  // Lekérdezés végrehajtása
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Az eredmény visszaadása tömb formájában
+        try {
+            $query = "SELECT id, nev, email, username, password, image_count, is_locked FROM users";
+            $stmt = $this->db->query($query);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Adatbázis hiba: " . $e->getMessage());
+        }
     }
 
     // Felhasználó hozzáadása
-    public function addUser($name, $password) {
+    public function addUser($username, $password, $email) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Jelszó hash-elése
-        $query = "INSERT INTO users (username, password) VALUES (?, ?)";
+        $query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$name, $hashedPassword]);
+        $stmt->execute([$username, $hashedPassword, $email]);
     }
 
     // Felhasználó hitelesítése
@@ -44,6 +48,19 @@ class login_model {
         }
 
         return false;  // Sikertelen hitelesítés
+    }
+    public function deleteUserById($id) {
+        $query = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    
+    public function lockUserById($id) {
+        $query = "UPDATE users SET is_locked = 1 WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
 
