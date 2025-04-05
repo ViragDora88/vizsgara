@@ -49,6 +49,7 @@
         </nav> 
     </header>
     <main>
+        
         <div class="burokkocka">
         <div class="kocka">
             <div class="oldal elol"></div>
@@ -64,7 +65,7 @@
         <pre><a href="https://www.facebook.com/Photo.Csucsi"><img src="facebooklogo.png" alt="facebooklogo" class="kapcslogo"></a> <a href="https://www.instagram.com/csucsi.gergely/"><img src="instagramlogo.png" alt="instagramlogo" class="kapcslogo"></a> </pre>
         <p>© Csucsi Gergely 2016</p>
     </footer>
-     <script src="JS/script.js"></script>
+    
     
 </body>
 </html>

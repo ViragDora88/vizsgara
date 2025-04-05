@@ -81,7 +81,7 @@ header{
     border-radius: 15px;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
     color: var(--second-color);
-    perspective: 1000px;
+    
     
 }
 
@@ -113,47 +113,48 @@ header{
 }
 
 .elol{
-    background-image: url("Kepek/egy.JPG");
+    background-image: url("http://localhost/vizsgarem/Kepek/egy.JPG");
     background-size: cover; /* A kép kitölti a konténert */
     background-position: center; /* A kép középre igazítása */
     background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
+    image-rendering: auto;
     transform: rotateY(0deg) translateZ(100px);
 
 }
 .jobb {
-    background-image: url("Kepek/ketto.JPG");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-image: url("http://localhost/vizsgarem/Kepek/ketto.JPG");
+    background-size: cover; /* A kép kitölti a konténert */
+    background-position: center; /* A kép középre igazítása */
+    background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
     transform: rotateY(90deg) translateZ(100px);
 }
 
 .hatul{
-    background-image: url("Kepek/harom.JPG");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-image: url("http://localhost/vizsgarem/Kepek/harom.JPG");
+    background-size: cover; /* A kép kitölti a konténert */
+    background-position: center; /* A kép középre igazítása */
+    background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
     transform: rotateY(180deg) translateZ(100px);
 }
 .bal{
-    background-image: url("Kepek/negy.JPG");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-image: url("http://localhost/vizsgarem/Kepek/negy.JPG");
+    background-size: cover; /* A kép kitölti a konténert */
+    background-position: center; /* A kép középre igazítása */
+    background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
     transform: rotateY(-90deg) translateZ(100px);
 }
 .felul{
-    background-image: url("Kepek/ot.JPG");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-image: url("http://localhost/vizsgarem/Kepek/ot.JPG");
+    background-size: cover; /* A kép kitölti a konténert */
+    background-position: center; /* A kép középre igazítása */
+    background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
     transform: rotatex(90deg) translateZ(100px);
 }
 .lent{
-    background-image: url("Kepek/hat.JPG");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-image: url("http://localhost/vizsgarem/Kepek/hat.JPG");
+    background-size: cover; /* A kép kitölti a konténert */
+    background-position: center; /* A kép középre igazítása */
+    background-repeat: no-repeat; /* Ne ismétlődjön a háttérkép */
 transform: rotateX(-90deg) translateZ(100px);
 }
 
