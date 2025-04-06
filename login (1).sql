@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 06. 14:18
+-- Létrehozás ideje: 2025. Ápr 06. 20:31
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -57,7 +57,7 @@ CREATE TABLE `users` (
   `nev` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` text NOT NULL,
   `kepekfeltoltes` int(11) NOT NULL,
   `is_locked` tinyint(1) NOT NULL,
   `lockUser` int(11) NOT NULL,
@@ -69,8 +69,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `nev`, `email`, `username`, `password`, `kepekfeltoltes`, `is_locked`, `lockUser`, `deleteUser`) VALUES
-(1, 'Felhasználó', '', 'user', 'password', 0, 0, 0, 0),
-(8, 'baba', 'baba@baba.hu', 'Dolly', '$2y$10$qAliXwXP096c8.oQ8scCwes6tGPXJSmosanolp/JfbW', 0, 0, 0, 0);
+(1, 'Felhasználó', 'user@localhost', 'user', '$2y$10$sXhcKejYIMtg84TFxJn6bueGvvxAxHkix14PAtZmkRYAHUvG46SDi', 0, 0, 0, 0);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -80,7 +79,8 @@ INSERT INTO `users` (`Id`, `nev`, `email`, `username`, `password`, `kepekfeltolt
 -- A tábla indexei `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- A kiírt táblák AUTO_INCREMENT értéke
@@ -90,7 +90,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
