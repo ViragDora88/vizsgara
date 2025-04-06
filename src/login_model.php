@@ -11,7 +11,7 @@ class login_model {
     // Felhasználók lekérése
     public function getUsers() {
         try {
-            $query = "SELECT id, nev, email, username, password, image_count, is_locked FROM users";
+            $query = "SELECT id, nev, email, username, password, is_locked FROM users";
             $stmt = $this->db->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -20,11 +20,11 @@ class login_model {
     }
 
     // Felhasználó hozzáadása
-    public function addUser($username, $password, $email) {
+    public function addUser($nev, $username, $password, $email) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Jelszó hash-elése
-        $query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        $query = "INSERT INTO users (nev, email, username, password) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$username, $hashedPassword, $email]);
+        $stmt->execute([$nev, $username, $hashedPassword, $email]);
     }
 
     // Felhasználó hitelesítése
@@ -43,8 +43,14 @@ class login_model {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Ellenőrizzük a jelszót
+        if ($user) {
+            // Ellenőrizzük, hogy a felhasználó zárolva van-e 
         if ($user && password_verify($password, $user['password'])) {
-            return $user;  // Ha a jelszó helyes, visszatérünk a felhasználó adataival
+            if ($user['is_locked'] == 1) {
+                return ['locked' => true];
+            }
+            return $user; // Ha a jelszó helyes, visszatérünk a felhasználó adataival
+        }
         }
 
         return false;  // Sikertelen hitelesítés
@@ -61,6 +67,12 @@ class login_model {
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+    public function userExists($username) {
+        $query = "SELECT id FROM users WHERE username = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$username]);
+        return $stmt->fetch() !== false;
     }
 }
 

@@ -6,8 +6,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // login_model és db osztályok betöltése
-require_once __DIR__ . '/login_model.php';
-require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/../src/login_model.php';
+require_once __DIR__ . '/../src/db.php';
+
 
 class Controller {
 
@@ -34,6 +35,12 @@ class Controller {
         $user = $this->users->login($username, $password);
 
         if ($user) {
+            if (isset($user['locked']) && $user['locked']) {
+                http_response_code(403); // Forbidden
+                echo json_encode(["message" => "A felhasználó le van tiltva."]);
+                return;
+            }
+        
             session_start();
             $_SESSION['user'] = $user['username']; // Session változó beállítása
             http_response_code(200); // OK
@@ -45,10 +52,9 @@ class Controller {
     }
 
     public function getUsers() {
-        header('Content-Type: application/json');
+        header('Content-Type: application/json'); // JSON válasz fejléc
         try {
-            // Feltételezve, hogy a $this->users->getUsers() lekéri az adatokat az adatbázisból
-            $users = $this->users->getUsers();
+            $users = $this->users->getUsers(); // Felhasználók lekérése az adatbázisból
             echo json_encode($users); // JSON formátumban visszaküldjük az adatokat
         } catch (Exception $e) {
             http_response_code(500); // Internal Server Error
@@ -61,15 +67,20 @@ class Controller {
         $data = json_decode(file_get_contents("php://input"));
     
         // Ellenőrzés hiányzó adatokra
-        if (!$data || !isset($data->username) || !isset($data->password) || !isset($data->email)) {
+        if (!$data || !isset($data->nev) || !isset($data->username) || !isset($data->password) || !isset($data->email)) {
             http_response_code(400); // Bad Request
             echo json_encode(["message" => "Hiányzó adatok"]);
             return;
         }
     
         try {
+            if ($this->users->userExists($data->username)) {
+                http_response_code(409); // Conflict
+                echo json_encode(["message" => "A felhasználónév már létezik"]);
+                return;
+            }
             // Felhasználó hozzáadása
-            $this->users->addUser($data->username, $data->password, $data->email);
+            $this->users->addUser($data->nev, $data->username, $data->password, $data->email);
             http_response_code(201); // Created
             echo json_encode(["message" => "Felhasználó létrehozva"]);
         } catch (Exception $e) {
@@ -139,6 +150,13 @@ if (isset($_GET['action'])) {
             break;
         case 'lockUser':
             $controller->lockUser();
+            break;
+        
+        case 'logout':
+            session_start();
+            session_destroy(); // Munkamenet törlése
+            header("Location: http://localhost/vizsgarem/HTML/login.html"); // Átirányítás a bejelentkezési oldalra
+            exit();
             break;
 
         default:

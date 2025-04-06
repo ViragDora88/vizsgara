@@ -76,8 +76,30 @@
                     </thead>
                    
                     <tbody>
-                        <!-- JS kód tölti be a sorokat -->
-                         
+                    <?php
+            require_once __DIR__ .'/src/controller.php'; // Hivatkozás a controller.php fájlra
+            $controller = new Controller(new login_model(new Db()));
+            $users = $controller->getUsers(); // Felhasználók lekérése
+
+            if (!empty($users)) {
+                foreach ($users as $user): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($user['nev']) ?></td>
+                        <td><?= htmlspecialchars($user['email']) ?></td>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['password']) ?></td>
+                        <td><?= htmlspecialchars($user['image_count']) ?></td>
+                        <td><?= $user['is_locked'] ? 'Igen' : 'Nem' ?></td>
+                        <td>
+                            <button onclick="lockUser(<?= $user['id'] ?>)">Letiltás</button>
+                            <button onclick="deleteUser(<?= $user['id'] ?>)">Törlés</button>
+                        </td>
+                    </tr>
+                <?php endforeach;
+            } else {
+                echo '<tr><td colspan="7">Nincs megjeleníthető adat.</td></tr>';
+            }
+            ?>
                     </tbody>
                 </table>
             </div>
