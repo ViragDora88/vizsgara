@@ -1,35 +1,45 @@
+
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    // A bejelentkezési űrlap adatainak kinyerése
     const username = document.getElementById("user").value;
     const password = document.getElementById("pass").value;
 
-    // A bejelentkezési adatok objektumba
-    const loginData = {
-        username: username,
-        password: password
-    };
-//console.log("URL: controller.php?action=login"); // Ellenőrizzük, hogy a helyes URL-t küldjük
-    // AJAX kérés a bejelentkezéshez
-    fetch("/src/controller.php?action=login", {
+    fetch("../src/controller.php?action=login", {
         method: "POST",
-        body: JSON.stringify(loginData),
+        body: JSON.stringify({
+            username: username,
+            password: password
+        }),
         headers: {
             "Content-Type": "application/json"
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        // Mindig próbáljuk meg feldolgozni a JSON választ
+        return response.json().then(data => {
+            if (!response.ok) {
+                // Ha a válasz nem OK, dobjunk hibát a szerver üzenetével
+                throw new Error(data.message || "Ismeretlen hiba történt.");
+            }
+            return data; // Ha OK, visszaadjuk a JSON adatokat
+        });
+    })
     .then(data => {
-        if (data.message === "Sikeres bejelentkezés") {
-            // Ha sikeres, írányítsa át az admin.html oldalra
+        console.log(data);
+
+        // Ellenőrizzük, hogy a felhasználó az "Admin" user-e
+        if (data.username === "Admin") {
+            // Ha admin, akkor admin.html-re irányítjuk a felhasználót
             window.location.href = "http://localhost/vizsgarem/HTML/admin.html";
         } else {
-            // Hibás bejelentkezés esetén
-            alert(data.message);
+            // Ha nem admin, akkor user.html-re irányítjuk a felhasználót
+            window.location.href = "http://localhost/vizsgarem/HTML/users.html";
         }
     })
     .catch(error => {
+        // Hibakezelés: hálózati hiba vagy szerver által küldött hibaüzenet
         console.error("Hiba:", error);
+        alert(error.message || "Nem sikerült csatlakozni a szerverhez.");
     });
 });

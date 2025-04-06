@@ -49,6 +49,7 @@
         </nav> 
     </header>
     <main>
+        
         <div class="burokkocka">
         <div class="kocka">
             <div class="oldal elol"></div>
@@ -64,7 +65,7 @@
         <pre><a href="https://www.facebook.com/Photo.Csucsi"><img src="facebooklogo.png" alt="facebooklogo" class="kapcslogo"></a> <a href="https://www.instagram.com/csucsi.gergely/"><img src="instagramlogo.png" alt="instagramlogo" class="kapcslogo"></a> </pre>
         <p>© Csucsi Gergely 2016</p>
     </footer>
-     <script src="JS/script.js"></script>
+    
     
 </body>
 </html>
@@ -100,17 +101,27 @@ $vegpont = $keres_tomb[0];  // Az első paraméter (pl. 'login')
 switch ($vegpont) {
     case "login":
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // POST kérés kezelése
             $controller->login();
             http_response_code(200);
         }
         break;
+
+    case "logout":
+        session_start();
+        session_destroy(); // Munkamenet törlése
+        header("Location: http://localhost/vizsgarem/HTML/login.html"); // Átirányítás a bejelentkezési oldalra
+        exit();
+        break;
+    
+        case "felhasznkezeles":
+            require_once 'felhaszn.php';
+            break;
+
     default:
         echo json_encode(["message" => "Invalid endpoint"]);
         http_response_code(404);
         break;
 }
-
 // Különböző műveletek végrehajtása az endpoint alapján
 //switch ($endpoint) {
 //    case "get":

@@ -30,7 +30,7 @@
             <div class="login_add">
                 <span>Új Felhasználó hozzáadása</span>
                 <br><br>
-                <form id="user-form" class="user-form" action="#">
+                <form id="user-form">
                     <div class="input-wrapper">
                         <label for="nev" class="input-label">Név:</label>
                         <input type="text" id="nev" name="nev" class="input-field" required>
@@ -75,9 +75,30 @@
                         </tr>
                     </thead>
                    
-                    <tbody id="user-table-body">
-                        <!-- JS kód tölti be a sorokat -->
-                         
+                    <tbody>
+                    <?php
+            require_once __DIR__ .'/src/controller.php'; // Hivatkozás a controller.php fájlra
+            
+
+            if (!empty($users)) {
+                foreach ($users as $user): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($user['nev']) ?></td>
+                        <td><?= htmlspecialchars($user['email']) ?></td>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['password']) ?></td>
+                        <td><?= htmlspecialchars($user['image_count']) ?></td>
+                        <td><?= $user['is_locked'] ? 'Igen' : 'Nem' ?></td>
+                        <td>
+                            <button onclick="lockUser(<?= $user['id'] ?>)">Letiltás</button>
+                            <button onclick="deleteUser(<?= $user['id'] ?>)">Törlés</button>
+                        </td>
+                    </tr>
+                <?php endforeach;
+            } else {
+                echo '<tr><td colspan="7">Nincs megjeleníthető adat.</td></tr>';
+            }
+            ?>
                     </tbody>
                 </table>
             </div>
