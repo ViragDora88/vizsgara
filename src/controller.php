@@ -10,48 +10,62 @@ require_once __DIR__ . '/../src/login_model.php';
 require_once __DIR__ . '/../src/db.php';
 
 
-class Controller {
+class Controller
+{
 
     private $users;
 
-    public function __construct($login_model) {
+    public function __construct($login_model)
+    {
         $this->users = $login_model;
     }
 
-    public function login() {
+
+    public function login()
+    {
         header('Content-Type: application/json'); // JSON válasz fejléc
-
-        $data = json_decode(file_get_contents("php://input"));
-
-        if (!$data || !isset($data->username) || !isset($data->password)) {
-            http_response_code(400); // Bad Request
-            echo json_encode(["message" => "Hiányzó adatok"]);
-            return;
-        }
-
-        $username = $data->username;
-        $password = $data->password;
-
-        $user = $this->users->login($username, $password);
-
-        if ($user) {
-            if (isset($user['locked']) && $user['locked']) {
-                http_response_code(403); // Forbidden
-                echo json_encode(["message" => "A felhasználó le van tiltva."]);
+    
+        try {
+            $data = json_decode(file_get_contents("php://input"));
+    
+            if (!$data || !isset($data->username) || !isset($data->password)) {
+                http_response_code(400); // Bad Request
+                echo json_encode(["message" => "Hiányzó adatok"]);
                 return;
             }
-        
-            session_start();
-            $_SESSION['user'] = $user['username']; // Session változó beállítása
-            http_response_code(200); // OK
-            echo json_encode(["message" => "Sikeres bejelentkezés"]);
-        } else {
-            http_response_code(401); // Unauthorized
-            echo json_encode(["message" => "Hibás felhasználónév vagy jelszó"]);
+    
+            $username = $data->username;
+            $password = $data->password;
+    
+            $user = $this->users->login($username, $password);
+    
+            if ($user) {
+                if (isset($user['locked']) && $user['locked']) {
+                    http_response_code(403); // Forbidden
+                    echo json_encode(["message" => "A felhasználó le van tiltva."]);
+                    error_log("Zárolt felhasználó próbált belépni: " . $username);
+                    return;
+                }
+    
+                session_start();
+                $_SESSION['user'] = $user['username']; // Session változó beállítása
+                http_response_code(200); // OK
+                echo json_encode(["message" => "Sikeres bejelentkezés", "username" => $user['username']]);
+                error_log("Sikeres bejelentkezés: " . $username);
+            } else {
+                http_response_code(401); // Unauthorized
+                echo json_encode(["message" => "Hibás felhasználónév vagy jelszó"]);
+                error_log("Sikertelen bejelentkezési kísérlet: " . $username);
+            }
+        } catch (Exception $e) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(["message" => "Hiba történt: " . $e->getMessage()]);
+            error_log("Hiba a bejelentkezés során: " . $e->getMessage());
         }
     }
 
-    public function getUsers() {
+    public function getUsers()
+    {
         header('Content-Type: application/json'); // JSON válasz fejléc
         try {
             $users = $this->users->getUsers(); // Felhasználók lekérése az adatbázisból
@@ -62,17 +76,18 @@ class Controller {
         }
     }
 
-    public function addUsers() {
+    public function addUsers()
+    {
         header('Content-Type: application/json');
         $data = json_decode(file_get_contents("php://input"));
-    
+
         // Ellenőrzés hiányzó adatokra
         if (!$data || !isset($data->nev) || !isset($data->username) || !isset($data->password) || !isset($data->email)) {
             http_response_code(400); // Bad Request
             echo json_encode(["message" => "Hiányzó adatok"]);
             return;
         }
-    
+
         try {
             if ($this->users->userExists($data->username)) {
                 http_response_code(409); // Conflict
@@ -89,18 +104,19 @@ class Controller {
         }
     }
     // A felhasználó törlése
-    public function deleteUser() {
+    public function deleteUser()
+    {
         header('Content-Type: application/json');
         $data = json_decode(file_get_contents("php://input"));
-    
+
         if (!isset($data->id)) {
             http_response_code(400);
             echo json_encode(["message" => "Hiányzó felhasználó ID"]);
             return;
         }
-    
+
         $result = $this->users->deleteUserById($data->id);
-    
+
         if ($result) {
             echo json_encode(["message" => "Felhasználó törölve."]);
         } else {
@@ -109,18 +125,19 @@ class Controller {
         }
     }
     // A felhasználó letiltása
-    public function lockUser() {
+    public function lockUser()
+    {
         header('Content-Type: application/json');
         $data = json_decode(file_get_contents("php://input"));
-    
+
         if (!isset($data->id)) {
             http_response_code(400);
             echo json_encode(["message" => "Hiányzó felhasználó ID"]);
             return;
         }
-    
+
         $result = $this->users->lockUserById($data->id);
-    
+
         if ($result) {
             echo json_encode(["message" => "Felhasználó letiltva."]);
         } else {
@@ -151,7 +168,7 @@ if (isset($_GET['action'])) {
         case 'lockUser':
             $controller->lockUser();
             break;
-        
+
         case 'logout':
             session_start();
             session_destroy(); // Munkamenet törlése
@@ -168,6 +185,3 @@ if (isset($_GET['action'])) {
     http_response_code(400); // Bad Request
     echo json_encode(["message" => "Nincs megadva művelet"]);
 }
-
-
-?>

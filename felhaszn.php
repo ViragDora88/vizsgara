@@ -30,7 +30,7 @@
             <div class="login_add">
                 <span>Új Felhasználó hozzáadása</span>
                 <br><br>
-                <form id="add-user-form">
+                <form id="user-form">
                     <div class="input-wrapper">
                         <label for="nev" class="input-label">Név:</label>
                         <input type="text" id="nev" name="nev" class="input-field" required>
@@ -78,8 +78,7 @@
                     <tbody>
                     <?php
             require_once __DIR__ .'/src/controller.php'; // Hivatkozás a controller.php fájlra
-            $controller = new Controller(new login_model(new Db()));
-            $users = $controller->getUsers(); // Felhasználók lekérése
+            
 
             if (!empty($users)) {
                 foreach ($users as $user): ?>

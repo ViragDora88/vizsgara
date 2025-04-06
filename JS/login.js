@@ -1,10 +1,11 @@
+
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const username = document.getElementById("user").value;
     const password = document.getElementById("pass").value;
 
-    fetch("http://localhost/vizsgarem/src/controller.php?action=login", {
+    fetch("../src/controller.php?action=login", {
         method: "POST",
         body: JSON.stringify({
             username: username,
@@ -15,28 +16,30 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         }
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error("HTTP hiba: " + response.status);
-        }
-        return response.text(); // Ideiglenesen textként olvassuk be
-    })
-    .then(text => {
-        try {
-            const data = JSON.parse(text); // JSON feldolgozás
-            console.log(data);
-            if (data.message === "Sikeres bejelentkezés") {
-                window.location.href = "http://localhost/vizsgarem/HTML/admin.html";
-            } else {
-                alert(data.message);
+        // Mindig próbáljuk meg feldolgozni a JSON választ
+        return response.json().then(data => {
+            if (!response.ok) {
+                // Ha a válasz nem OK, dobjunk hibát a szerver üzenetével
+                throw new Error(data.message || "Ismeretlen hiba történt.");
             }
-        } catch (error) {
-            console.error("JSON feldolgozási hiba:", error);
-            console.error("Kapott válasz:", text);
-            alert("Hiba történt a szerver válaszának feldolgozása során.");
+            return data; // Ha OK, visszaadjuk a JSON adatokat
+        });
+    })
+    .then(data => {
+        console.log(data);
+
+        // Ellenőrizzük, hogy a felhasználó az "Admin" user-e
+        if (data.username === "Admin") {
+            // Ha admin, akkor admin.html-re irányítjuk a felhasználót
+            window.location.href = "http://localhost/vizsgarem/HTML/admin.html";
+        } else {
+            // Ha nem admin, akkor user.html-re irányítjuk a felhasználót
+            window.location.href = "http://localhost/vizsgarem/HTML/users.html";
         }
     })
     .catch(error => {
+        // Hibakezelés: hálózati hiba vagy szerver által küldött hibaüzenet
         console.error("Hiba:", error);
-        alert("Nem sikerült csatlakozni a szerverhez.");
+        alert(error.message || "Nem sikerült csatlakozni a szerverhez.");
     });
 });

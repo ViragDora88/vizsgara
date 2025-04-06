@@ -1,18 +1,25 @@
-console.log("A JavaScript fájl betöltődött!");
+//console.log("A JavaScript fájl betöltődött!");
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM betöltődött!");
     // Form eseménykezelő
     const form = document.getElementById("user-form"); // Győződj meg róla, hogy az űrlapnak van id-ja
-
+   console.log("Űrlap elem:", form);
+    // Ellenőrizzük, hogy az űrlap elem létezik-e
     if (form) {
         form.addEventListener("submit", function (e) {
-            e.preventDefault(); // Megakadályozzuk az alapértelmezett űrlap beküldést
-
+            console.log("Eseménykezelő aktiválva!");
+            e.preventDefault(); // Megakadályozzuk az alapértelmezett beküldést
+            console.log("Űrlap beküldve!");
             // Form adatainak kinyerése
             const nev = document.getElementById("nev")?.value.trim();
+            console.log("Név:", nev);
             const email = document.getElementById("email")?.value.trim();
+            console.log("Email:", email);
             const username = document.getElementById("user")?.value.trim();
+            console.log("Felhasználónév:", username);
             const password = document.getElementById("pass")?.value.trim();
+            console.log("Jelszó:", password);
 
             // Ellenőrzés, hogy a kötelező mezők ki vannak-e töltve
             if (!nev || !email || !username || !password) {
@@ -21,13 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const userData = {
-                username: username,
-                password: password,
+                nev: nev,
                 email: email,
-                nev: nev
+                username: username,
+                password: password
             };
 
-            console.log("Elküldött adatok:", userData);
+            console.log("Fetch hívás indul:", userData);
 
             // AJAX kéréssel elküldjük a backendnek
             fetch("http://localhost/vizsgarem/src/controller.php?action=addUsers", {
@@ -50,21 +57,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .catch(error => console.error("Hiba:", error));
         });
+        
     }
 
     // Felhasználók lekérése
     fetch("http://localhost/vizsgarem/src/controller.php?action=getUsers")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("HTTP hiba: " + response.status);
-            }
-            return response.json();
-        })
-        .then(users => {
-            console.log("Felhasználók:", users);
-            // További kód a felhasználók megjelenítésére
-        })
-        .catch(error => console.error("Hiba a felhasználók lekérésekor:", error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("HTTP hiba: " + response.status);
+        }
+        return response.json();
+    })
+    .then(users => {
+        const userTableBody = document.querySelector("#user-table tbody");
+        userTableBody.innerHTML = ""; // Töröljük a meglévő sorokat
+
+        if (users.length > 0) {
+            users.forEach(user => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${user.nev}</td>
+                    <td>${user.email}</td>
+                    <td>${user.username}</td>
+                    <td>${user.password}</td>
+                    <td>${user.image_count}</td>
+                    <td>${user.is_locked ? "Igen" : "Nem"}</td>
+                    <td>
+                        <button onclick="lockUser(${user.id})">Letiltás</button>
+                        <button onclick="deleteUser(${user.id})">Törlés</button>
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+        } else {
+            userTableBody.innerHTML = '<tr><td colspan="7">Nincs megjeleníthető adat.</td></tr>';
+        }
+    })
+    .catch(error => console.error("Hiba a felhasználók lekérésekor:", error))
 });
 
 // Felhasználó zárolása
