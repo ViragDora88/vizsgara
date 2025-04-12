@@ -8,46 +8,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-    <form id="loginForm">
-    <div class="container">
-        <div class="login-container">
-            <div class="login_title">
-                <span>Login</span>
-            </div>
+    <form id="loginForm" action="login.php" method="POST"> <!-- Add action and method for form submission -->
+        <div class="container">
+            <div class="login-container">
+                <div class="login_title">
+                    <span>Login</span>
+                </div>
                 <div class="input-wrapper">
                     <label for="user" class="input-label">Felhasználó név:</label>
-                    <input type="text" id="user" class="input-field" required>
-                    <i class="fa-regular fa-user icon"></i>
+                    <input type="text" id="user" class="input-field" name="username" required> <!-- Added name attribute for form data -->
+                    <i class="fa-regular fa-user icon" aria-hidden="true"></i> <!-- Added aria-hidden for screen readers -->
                 </div>
                 <div class="input-wrapper">
                     <label for="pass" class="input-label">Jelszó:</label>
-                    <input type="password" id="pass" class="input-field" required>
-                    <i class="fa-solid fa-lock icon"></i>
+                    <input type="password" id="pass" class="input-field" name="password" required> <!-- Added name attribute for form data -->
+                    <i class="fa-solid fa-lock icon" aria-hidden="true"></i> <!-- Added aria-hidden for screen readers -->
                 </div>
                 <br>
                 <div class="remember-forgot">
                     <div class="remember">
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" id="remember" name="remember"> <!-- Added name for the checkbox -->
                         <label for="remember">Emlékezz rám</label>
                     </div>
                     <div class="forgot">
-                        <a href="#">Elfelejtettem a jelszavam</a>
+                        <a href="forgot-password.php">Elfelejtettem a jelszavam</a> <!-- Updated link to an actual forgot password page -->
                     </div>
                 </div>
                 <br>
 
                 <div class="input-wrapper">
-                    <input type="submit" value="Bejelentkezés" class="input-submit">
+                    <input type="submit" value="Bejelentkezés" class="input-submit" name="submit"> <!-- Added name for submit -->
                 </div>
                 <br>
 
                 <div class="back-home">
                     <span><a href="http://localhost/vizsgarem/index.php">Vissza a főoldalra</a></span>
                 </div>
-    </form>
+            </div>
         </div>
-    </div>
+    </form>
 
-    <script src="http://localhost/vizsgarem/JS/login.js"></script>
+    <script src="http://localhost/vizsgarem/JS/login.js"></script> <!-- Ensure your JS is working -->
 </body>
 </html>
