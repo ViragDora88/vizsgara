@@ -96,6 +96,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(error => console.error("Hiba a felhasználók lekérésekor:", error))
 });
 
+
+
 // Felhasználó zárolása
 function lockUser(id) {
     fetch("http://localhost/vizsgarem/src/controller.php?action=lockUser", {

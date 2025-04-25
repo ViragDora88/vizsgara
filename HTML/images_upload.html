@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vizsgaremek</title>
+    <link rel="stylesheet" href="../style/images_upload.css">
+    <body>
+        <!-- Oldalsó menü -->
+        <div class="sidebar">
+            <h2>Admin Menü</h2>
+            <ul>
+                <li><a href="admin.html">Főoldal</a></li>
+                <li><a href="felhasznkezeles.html">Felhasználók kezelése</a></li>
+                <li><a href="images_upload.html">Képek feltöltése</a></li>
+                <li><a href="../logout.php">Kijelentkezés</a></li>
+            </ul>
+        </div>
+       <div class='content'>
+        <h3>Kép feltöltése adott felhasználóhoz</h3>
+
+            <form action="../upload_image.php" method="post" enctype="multipart/form-data">
+            <label for="user_id">Felhasználó kiválasztása:</label>
+            <select name="user_id" id="user_id" required>
+                
+            </select>
+
+            <br><br>
+
+            <label for="image">Képek kiválasztása:</label>
+            <input type="file" name="image" id="image" accept="image/*" required>
+
+            <br><br>
+
+            <button type="submit">Képek feltöltése</button>
+            </form>
+       </div>
+       <script src="../JS/loadusers.js"></script>
+    </body>
+</html>

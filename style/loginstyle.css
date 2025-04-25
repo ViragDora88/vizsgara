@@ -12,7 +12,7 @@
 
 body {
     background-position: center;
-    background-image: url("http://localhost/vizsgarem/Kepek/loginbackground.jpeg");
+    background-image: url("../Kepek/loginbackground.jpeg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

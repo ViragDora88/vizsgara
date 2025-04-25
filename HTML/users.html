@@ -3,13 +3,35 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../style/style.css"> 
+        <link rel="stylesheet" href="../style/users.css"> 
     </head>
     <body>
-        <div>Szia! Jó nézelődést! :)</div>
+        <header>
+            <div class="title"><h1>Galéria</h1></div>
+            
+            <div class="szoveg">
+            <p>Kérlek válaszd ki a képeket, amelyeket szeretnél megrendelni.</p>
+            <p>A kijelölt képeket a megrendelés gomb megnyomásával küldöd el nekem.</p>
+            <p> A képek a megrendelést követően törlődnek. </p>
+            </div>
            
-            <div class="back-home">
+            <div class="backhome">
             <span><a href="../logout.php">Kijelentkezés</a></span>
+            </div>
+        </header>
+        <form action="../order_image.php" method="POST">
+        <div class="gallery">
+            <section>
+                
+            </section>
+
+            <br>
+            <div class="input-wrapper">   
+               
+                    <input type="submit" value="Megrendelem" class="input-submit" name="image_id">
+                  </form>
+            </div>
         </div>
+        <script src='../JS/loadimages.js'></script>
     </body>
 </html>
