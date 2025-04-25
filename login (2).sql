@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 06. 20:31
+-- Létrehozás ideje: 2025. Ápr 25. 21:20
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -24,26 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `kepek`
+-- Tábla szerkezet ehhez a táblához `images`
 --
 
-CREATE TABLE `kepek` (
-  `Id` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `image` multipoint NOT NULL
+CREATE TABLE `images` (
+  `id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `megrendeles`
+-- Tábla szerkezet ehhez a táblához `orders`
 --
 
-CREATE TABLE `megrendeles` (
-  `Id` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `kepid` int(11) NOT NULL,
-  `kepek` multipoint NOT NULL
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `image_id` int(11) NOT NULL,
+  `ordered_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -69,11 +70,28 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `nev`, `email`, `username`, `password`, `kepekfeltoltes`, `is_locked`, `lockUser`, `deleteUser`) VALUES
-(1, 'Felhasználó', 'user@localhost', 'user', '$2y$10$sXhcKejYIMtg84TFxJn6bueGvvxAxHkix14PAtZmkRYAHUvG46SDi', 0, 0, 0, 0);
+(1, 'Felhasználó', 'user@localhost', 'user', '$2y$10$sXhcKejYIMtg84TFxJn6bueGvvxAxHkix14PAtZmkRYAHUvG46SDi', 0, 0, 0, 0),
+(7, 'Alma', 'alma@alma', 'Alma', '$2y$10$M9.1T41AacHUNmC3cxtCnO4foJgSAiB1k3Rt9PWKclgkmVNHWa94O', 0, 0, 0, 0),
+(8, 'Körte', 'korte@korte.hu', 'Körte', '$2y$10$RpxZQfV5EgOvWwYAWqKMiOlFQHhc9U1.BPkCwoIBZe6QM4T8VsQeS', 0, 0, 0, 0);
 
 --
 -- Indexek a kiírt táblákhoz
 --
+
+--
+-- A tábla indexei `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- A tábla indexei `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `image_id` (`image_id`);
 
 --
 -- A tábla indexei `users`
@@ -87,10 +105,39 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT a táblához `images`
+--
+ALTER TABLE `images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT a táblához `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Megkötések a kiírt táblákhoz
+--
+
+--
+-- Megkötések a táblához `images`
+--
+ALTER TABLE `images`
+  ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`Id`);
+
+--
+-- Megkötések a táblához `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`Id`),
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
