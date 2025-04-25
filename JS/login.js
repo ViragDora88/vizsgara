@@ -31,10 +31,10 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         // Ellenőrizzük, hogy a felhasználó az "Admin" user-e
         if (data.username === "Admin") {
             // Ha admin, akkor admin.html-re irányítjuk a felhasználót
-            window.location.href = "http://localhost/vizsgarem/HTML/admin.html";
+            window.location.href = "../HTML/admin.html";
         } else {
             // Ha nem admin, akkor user.html-re irányítjuk a felhasználót
-            window.location.href = "http://localhost/vizsgarem/HTML/users.html";
+            window.location.href = "../HTML/users.html";
         }
     })
     .catch(error => {

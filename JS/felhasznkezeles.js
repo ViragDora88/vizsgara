@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Fetch hívás indul:", userData);
 
             // AJAX kéréssel elküldjük a backendnek
-            fetch("http://localhost/vizsgarem/src/controller.php?action=addUsers", {
+            fetch("../src/controller.php?action=addUsers", {
                 method: "POST",
                 body: JSON.stringify(userData),
                 headers: {
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Felhasználók lekérése
-    fetch("http://localhost/vizsgarem/src/controller.php?action=getUsers")
+    fetch("../src/controller.php?action=getUsers")
     .then(response => {
         if (!response.ok) {
             throw new Error("HTTP hiba: " + response.status);
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Felhasználó zárolása
 function lockUser(id) {
-    fetch("http://localhost/vizsgarem/src/controller.php?action=lockUser", {
+    fetch("../src/controller.php?action=lockUser", {
         method: "POST",
         body: JSON.stringify({ id: id }),
         headers: { "Content-Type": "application/json" }
@@ -122,7 +122,7 @@ function lockUser(id) {
 function deleteUser(id) {
     if (!confirm("Biztosan törölni szeretnéd ezt a felhasználót?")) return;
 
-    fetch("http://localhost/vizsgarem/src/controller.php?action=deleteUser", {
+    fetch("../src/controller.php?action=deleteUser", {
         method: "POST",
         body: JSON.stringify({ id: id }),
         headers: { "Content-Type": "application/json" }

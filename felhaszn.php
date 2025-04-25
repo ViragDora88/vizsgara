@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Felhasználók kezelése</title>
-    <link rel="stylesheet" href="http://localhost/vizsgarem/style/felhasznkezeles.css">
+    <link rel="stylesheet" href="../style/felhasznkezeles.css">
 </head>
 <body>
     <!-- Oldalsó menü -->
@@ -105,6 +105,6 @@
         </div>
     </div>
 
-    <script src="http://localhost/vizsgarem/JS/felhasznkezeles.js"></script>
+    <script src="http://../JS/felhasznkezeles.js"></script>
 </body>
 </html>

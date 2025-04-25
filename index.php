@@ -1,4 +1,76 @@
+<?php
+spl_autoload_register(function($class){
+    require( __DIR__ . "/src/$class.php");
+});
 
+
+
+// Osztályok betöltése
+require_once 'src/db.php';         // A Db osztály betöltése
+require_once 'src/login_model.php'; // A login_model osztály betöltése
+require_once 'src/controller.php';  // A controller osztály betöltése
+
+// Adatbázis kapcsolódás
+$db = new Db(); // Db osztály példányosítása
+
+// login_model osztály példányosítása a Db példányával
+$login_model = new login_model($db);
+
+// Controller osztály példányosítása a login_model példányával
+$controller = new controller($login_model);
+
+// Request URL feldolgozása
+//$request = explode("/", $_SERVER["REQUEST_URI"]);
+//$endpoint = isset($request[2]) ? $request[2] : '';  // A kérés második része az endpoint
+$request = explode("/", $_SERVER["REQUEST_URI"]);
+$keres = $request[2]; // Végpont lekérése
+$keres_tomb = explode("?", $keres);
+$vegpont = $keres_tomb[0];  // Az első paraméter (pl. 'login')
+
+switch ($vegpont) {
+    case "login":
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->login();
+            http_response_code(200);
+        }
+        break;
+
+    case "logout":
+        session_start();
+        session_destroy(); // Munkamenet törlése
+        header("Location: ../HTML/login.html"); // Átirányítás a bejelentkezési oldalra
+        exit();
+        break;
+    
+        case "felhasznkezeles":
+            require_once 'felhaszn.php';
+            break;
+
+    default:
+        echo json_encode(["message" => "Invalid endpoint"]);
+        http_response_code(404);
+        break;
+}
+// Különböző műveletek végrehajtása az endpoint alapján
+//switch ($endpoint) {
+//    case "get":
+//        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+//            $controller->getUsers();  // Felhasználók lekérése
+//        }
+//        break;
+//
+//    case "add":
+//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $controller->addUsers();  // Felhasználó hozzáadása
+//        }
+//        break;
+//
+//    default:
+//        echo json_encode(["message" => "Invalid endpoint"]);  // Hibás endpoint
+//        break;
+//}
+
+?>
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
@@ -69,76 +141,3 @@
     
 </body>
 </html>
-<?php
-spl_autoload_register(function($class){
-    require( __DIR__ . "/src/$class.php");
-});
-
-
-
-// Osztályok betöltése
-require_once 'src/db.php';         // A Db osztály betöltése
-require_once 'src/login_model.php'; // A login_model osztály betöltése
-require_once 'src/controller.php';  // A controller osztály betöltése
-
-// Adatbázis kapcsolódás
-$db = new Db(); // Db osztály példányosítása
-
-// login_model osztály példányosítása a Db példányával
-$login_model = new login_model($db);
-
-// Controller osztály példányosítása a login_model példányával
-$controller = new controller($login_model);
-
-// Request URL feldolgozása
-//$request = explode("/", $_SERVER["REQUEST_URI"]);
-//$endpoint = isset($request[2]) ? $request[2] : '';  // A kérés második része az endpoint
-$request = explode("/", $_SERVER["REQUEST_URI"]);
-$keres = $request[2]; // Végpont lekérése
-$keres_tomb = explode("?", $keres);
-$vegpont = $keres_tomb[0];  // Az első paraméter (pl. 'login')
-
-switch ($vegpont) {
-    case "login":
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $controller->login();
-            http_response_code(200);
-        }
-        break;
-
-    case "logout":
-        session_start();
-        session_destroy(); // Munkamenet törlése
-        header("Location: http://localhost/vizsgarem/HTML/login.html"); // Átirányítás a bejelentkezési oldalra
-        exit();
-        break;
-    
-        case "felhasznkezeles":
-            require_once 'felhaszn.php';
-            break;
-
-    default:
-        echo json_encode(["message" => "Invalid endpoint"]);
-        http_response_code(404);
-        break;
-}
-// Különböző műveletek végrehajtása az endpoint alapján
-//switch ($endpoint) {
-//    case "get":
-//        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-//            $controller->getUsers();  // Felhasználók lekérése
-//        }
-//        break;
-//
-//    case "add":
-//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//            $controller->addUsers();  // Felhasználó hozzáadása
-//        }
-//        break;
-//
-//    default:
-//        echo json_encode(["message" => "Invalid endpoint"]);  // Hibás endpoint
-//        break;
-//}
-
-?>
