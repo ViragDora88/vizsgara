@@ -1,15 +1,22 @@
-
-<?php // képek megrendelése
+<?php
 session_start();
-require_once '../src/db.php';
-$db = new Db();
-$conn = $db->getConnection();
+require_once __DIR__ . '/src/db.php';
 
-$userId = $_SESSION['user_id'];  // Feltételezzük, hogy be van lépve
-$imageId = $_POST['image_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_images'])) {
+    $userId = $_SESSION['user_id'];
+    $imageIds = $_POST['selected_images'];
 
-$stmt = $conn->prepare("INSERT INTO orders (user_id, image_id) VALUES (?, ?)");
-$stmt->execute([$userId, $imageId]);
+    // Példa feldolgozás
+    $db = new Db();
+    $conn = $db->getConnection();
 
-echo "Rendelés sikeres!";
-?>
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, image_id, ordered_at) VALUES (?, ?, NOW())");
+
+    foreach ($imageIds as $imageId) {
+        $stmt->execute([$userId, $imageId]);
+    }
+
+    echo "Megrendelés sikeresen rögzítve!";
+} else {
+    echo "Nincs kiválasztva kép.";
+}

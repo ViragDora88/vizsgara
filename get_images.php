@@ -1,20 +1,20 @@
-<?php //képek lekérése adatbázisból
+<?php
 session_start();
-require_once '../src/db.php';
-$db = new Db();
-$conn = $db->getConnection();
+header('Content-Type: application/json');
+require_once __DIR__ . '/src/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(403);
-    echo json_encode(["error" => "Nincs bejelentkezve."]);
+    echo json_encode([]);
     exit;
 }
 
 $userId = $_SESSION['user_id'];
 
-$stmt = $conn->prepare("SELECT id, filename FROM images WHERE user_id = ?");
+$db = new Db();
+$conn = $db->getConnection();
+
+$stmt = $conn->prepare("SELECT id, filename, user_id FROM images WHERE user_id = ?");
 $stmt->execute([$userId]);
 $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-header('Content-Type: application/json');
 echo json_encode($images);

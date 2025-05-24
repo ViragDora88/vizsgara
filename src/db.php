@@ -9,16 +9,20 @@ class Db {
 
     private $connection;
 
-    public function __construct() {
+    public function __construct()
+    {
         try {
-            $this->connection = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->user, $this->pass);
+            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4";
+            $this->connection = new PDO($dsn, $this->user, $this->pass);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
+            // Hiba esetén leállítja a szkriptet és kiírja a hibaüzenetet
             die("Adatbázis kapcsolat hiba: " . $e->getMessage());
         }
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 }

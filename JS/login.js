@@ -42,4 +42,5 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
         console.error("Hiba:", error);
         alert(error.message || "Nem sikerült csatlakozni a szerverhez.");
     });
+    
 });

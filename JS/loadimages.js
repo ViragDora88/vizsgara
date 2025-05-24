@@ -1,33 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("../get_images.php")
-        .then(res => res.json())
-        .then(images => {
-            const section = document.querySelector(".gallery section");
-
-            if (!Array.isArray(images)) {
-                console.error("Nem tömb jött vissza:", images);
-                return;
-            }
-
-            images.forEach(image => {
-                const imgWrapper = document.createElement("div");
-                imgWrapper.classList.add("image-box");
+    fetch('../get_images.php')
+        .then(response => response.json())
+        .then(data => {
+            const section = document.querySelector("section");
+            data.forEach(image => {
+                const div = document.createElement("div");
+                div.classList.add("image-item");
 
                 const img = document.createElement("img");
-                img.src = `../uploads/${image.filename}`;
+                img.src = `../contest/${image.user_id}/${image.filename}`;
                 img.alt = "Feltöltött kép";
+                img.width = 200;
 
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.name = "selected_images[]";
                 checkbox.value = image.id;
 
-                imgWrapper.appendChild(img);
-                imgWrapper.appendChild(checkbox);
-
-                section.appendChild(imgWrapper);
+                div.appendChild(img);
+                div.appendChild(checkbox);
+                section.appendChild(div);
             });
-            
         })
-        .catch(err => console.error("Hiba a képek betöltésekor:", err));
+        .catch(error => {
+            console.error("Hiba a képek betöltése közben:", error);
+        });
+        
 });
