@@ -1,0 +1,100 @@
+[27-May-2025 20:39:26 Europe/Berlin] PHP Warning:  Undefined array key "id" in D:\xampp\htdocs\vizsgarem\src\login_model.php on line 59
+[27-May-2025 20:39:26 Europe/Berlin] Sikeres bejelentkezés: Alma
+[27-May-2025 20:39:26 Europe/Berlin] Session beállítva: Array
+(
+    [user] => Alma
+    [user_id] => 
+)
+
+[27-May-2025 20:48:10 Europe/Berlin] PHP Warning:  Undefined array key "id" in D:\xampp\htdocs\vizsgarem\src\login_model.php on line 59
+[27-May-2025 20:48:10 Europe/Berlin] Sikeres bejelentkezés: Alma
+[27-May-2025 20:48:10 Europe/Berlin] Session beállítva: Array
+(
+    [user] => Alma
+    [user_id] => 
+)
+
+[27-May-2025 21:01:46 Europe/Berlin] Sikeres bejelentkezés: Admin
+[27-May-2025 21:01:46 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 0
+    [user] => Admin
+)
+
+[27-May-2025 21:02:50 Europe/Berlin] PHP Warning:  Undefined array key "id" in D:\xampp\htdocs\vizsgarem\src\login_model.php on line 59
+[27-May-2025 21:02:50 Europe/Berlin] Sikeres bejelentkezés: Alma
+[27-May-2025 21:02:50 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 
+    [user] => Alma
+)
+
+[27-May-2025 21:06:46 Europe/Berlin] login_model: login hívás - felhasználó: Alma
+[27-May-2025 21:06:46 Europe/Berlin] login_model: adatbázisból visszakapott user: Array
+(
+    [Id] => 7
+    [nev] => Alma
+    [email] => alma@alma
+    [username] => Alma
+    [password] => $2y$10$M9.1T41AacHUNmC3cxtCnO4foJgSAiB1k3Rt9PWKclgkmVNHWa94O
+    [kepekfeltoltes] => 0
+    [is_locked] => 0
+    [lockUser] => 0
+    [deleteUser] => 0
+)
+
+[27-May-2025 21:06:46 Europe/Berlin] login_model: sikeres bejelentkezés: Alma
+[27-May-2025 21:06:46 Europe/Berlin] PHP Warning:  Undefined array key "id" in D:\xampp\htdocs\vizsgarem\src\login_model.php on line 63
+[27-May-2025 21:06:46 Europe/Berlin] Sikeres bejelentkezés: Alma
+[27-May-2025 21:06:46 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 
+    [user] => Alma
+)
+
+[27-May-2025 21:08:41 Europe/Berlin] login_model: login hívás - felhasználó: Alma
+[27-May-2025 21:08:41 Europe/Berlin] login_model: adatbázisból visszakapott user: Array
+(
+    [Id] => 7
+    [nev] => Alma
+    [email] => alma@alma
+    [username] => Alma
+    [password] => $2y$10$M9.1T41AacHUNmC3cxtCnO4foJgSAiB1k3Rt9PWKclgkmVNHWa94O
+    [kepekfeltoltes] => 0
+    [is_locked] => 0
+    [lockUser] => 0
+    [deleteUser] => 0
+)
+
+[27-May-2025 21:08:41 Europe/Berlin] login_model: sikeres bejelentkezés: Alma
+[27-May-2025 21:08:41 Europe/Berlin] Sikeres bejelentkezés: Alma
+[27-May-2025 21:08:41 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 7
+    [user] => Alma
+)
+
+[27-May-2025 21:14:55 Europe/Berlin] login_model: login hívás - felhasználó: Admin
+[27-May-2025 21:14:55 Europe/Berlin] login_model: adatbázisból visszakapott user: 
+[27-May-2025 21:14:55 Europe/Berlin] login_model: sikertelen bejelentkezés: Admin
+[27-May-2025 21:14:55 Europe/Berlin] Sikertelen bejelentkezési kísérlet: Admin
+[27-May-2025 21:14:55 Europe/Berlin] PHP Warning:  Undefined global variable $_SESSION in D:\xampp\htdocs\vizsgarem\src\controller.php on line 69
+[27-May-2025 21:14:55 Europe/Berlin] Session beállítva: 
+[27-May-2025 21:15:04 Europe/Berlin] login_model: login hívás - felhasználó: Admin
+[27-May-2025 21:15:04 Europe/Berlin] login_model: Admin belépés sikeres
+[27-May-2025 21:15:04 Europe/Berlin] Sikeres bejelentkezés: Admin
+[27-May-2025 21:15:04 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 0
+    [user] => Admin
+)
+
+[27-May-2025 21:34:54 Europe/Berlin] login_model: login hívás - felhasználó: Admin
+[27-May-2025 21:34:54 Europe/Berlin] login_model: Admin belépés sikeres
+[27-May-2025 21:34:54 Europe/Berlin] Sikeres bejelentkezés: Admin
+[27-May-2025 21:34:54 Europe/Berlin] Session beállítva: Array
+(
+    [user_id] => 0
+    [user] => Admin
+)
+

@@ -33,32 +33,41 @@ class login_model
 
     // Felhasználó hitelesítése
     public function login($username, $password)
-    {
-        // Fix admin hitelesítés (Admin/admin87)
-        if ($username === 'Admin' && $password === 'admin87') {
-            return ['username' => 'Admin'];  // Ha az admin bejelentkezett
-        }
+{
+    error_log("login_model: login hívás - felhasználó: $username");
 
-        // Normál felhasználó hitelesítése
-        $query = "SELECT * FROM users WHERE username = :username";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Ellenőrizzük a felhasználót (és a jelszavát)
-        //if ($user && password_verify($password, $user['password'])) {
-        if ($user) {
-        
-            // Ellenőrizzük, hogy a felhasználó zárolva van-e
-            if ($user['is_locked'] == 1) {
-                return ['locked' => true];
-            }
-            return ['username' => $user['username']];  // Sikeres hitelesítés
-        }
-        return false;  // Sikertelen hitelesítés
+    // Fix admin hitelesítés (Admin/admin87)
+    if ($username === 'Admin' && $password === 'admin87') {
+        error_log("login_model: Admin belépés sikeres");
+        return ['id' => 0, 'username' => 'Admin'];  // Ha az admin bejelentkezett
     }
+
+    // Normál felhasználó hitelesítése
+    $query = "SELECT * FROM users WHERE username = :username";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    error_log("login_model: adatbázisból visszakapott user: " . print_r($user, true));
+
+    // Ellenőrizzük a felhasználót (és a jelszavát)
+    if ($user && password_verify($password, $user['password'])) {
+        if ($user['is_locked'] == 1) {
+            error_log("login_model: felhasználó le van tiltva: $username");
+            return ['locked' => true];
+        }
+        error_log("login_model: sikeres bejelentkezés: $username");
+        return [
+            'id' => $user['Id'],  // hozzáadva az ID
+            'username' => $user['username']
+        ];  // Sikeres hitelesítés
+    }
+
+    error_log("login_model: sikertelen bejelentkezés: $username");
+    return false;  // Sikertelen hitelesítés
+}
     public function deleteUserById($id)
     {
         $query = "DELETE FROM users WHERE id = :id";
@@ -80,5 +89,21 @@ class login_model
         $stmt = $this->db->prepare($query);
         $stmt->execute([$username]);
         return $stmt->fetch() !== false;
+    }
+    public function getOrders()
+    {
+        try {
+            // ÖSSZEKAPCSOLJUK A felhasználó és kép adatait is, hogy ne csak az ID-k jelenjenek meg.
+            $query = "SELECT o.id, o.user_id, o.image_id,  u.username, i.image_name
+                    FROM orders o
+                    LEFT JOIN users u ON o.user_id = u.id
+                    LEFT JOIN images i ON o.image_id = i.id
+                    ;
+
+            $stmt = $this->db->query($query);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Adatbázis hiba: " . $e->getMessage());
+        }
     }
 }

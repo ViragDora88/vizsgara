@@ -1,6 +1,8 @@
 //felhasználók betöltése a legördülő listába
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('../src/controller.php?action=getUsers')
+    fetch('../src/controller.php?action=getUsers',{
+        credentials: 'include',
+    })
         .then(response => response.json())
         .then(users => {
             const select = document.getElementById("user_id");

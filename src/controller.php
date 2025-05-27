@@ -1,8 +1,9 @@
 <?php
 
 // PHP hibák megjelenítése fejlesztési környezetben
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__.'/../logs/php_errors.log');
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // login_model és db osztályok betöltése
@@ -48,7 +49,10 @@ class Controller
                 }
     
                 session_start();
+               
+                $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user'] = $user['username']; // Session változó beállítása
+                
                 http_response_code(200); // OK
                 echo json_encode(["message" => "Sikeres bejelentkezés", "username" => $user['username']]);
                 error_log("Sikeres bejelentkezés: " . $username);
@@ -62,6 +66,7 @@ class Controller
             echo json_encode(["message" => "Hiba történt: " . $e->getMessage()]);
             error_log("Hiba a bejelentkezés során: " . $e->getMessage());
         }
+        error_log("Session beállítva: " . print_r($_SESSION, true));
     }
 
     public function getUsers()
@@ -145,6 +150,17 @@ class Controller
             echo json_encode(["message" => "Nem sikerült letiltani a felhasználót."]);
         }
     }
+    public function getOrders()
+    {
+        header('Content-Type: application/json');
+        try {
+            $orders = $this->users->getOrders();
+            echo json_encode($orders);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(["message" => "Hiba történt az adatok lekérésekor: " . $e->getMessage()]);
+        }
+    }
 }
 
 if (isset($_GET['action'])) {
@@ -174,6 +190,9 @@ if (isset($_GET['action'])) {
             session_destroy(); // Munkamenet törlése
             header("Location: http://localhost/vizsgarem/HTML/login.html"); // Átirányítás a bejelentkezési oldalra
             exit();
+            break;
+        case 'getOrders':
+            $controller->getOrders();// feltételezzük, hogy login_model-ben van getOrders()
             break;
 
         default:

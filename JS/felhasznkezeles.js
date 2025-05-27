@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // AJAX kéréssel elküldjük a backendnek
             fetch("../src/controller.php?action=addUsers", {
                 method: "POST",
+                credentials: "include",
                 body: JSON.stringify(userData),
                 headers: {
                     "Content-Type": "application/json"

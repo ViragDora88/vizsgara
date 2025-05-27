@@ -4,10 +4,13 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
 
     const username = document.getElementById("user").value;
     const password = document.getElementById("pass").value;
-
+    
+    debugger;
     fetch("../src/controller.php?action=login", {
         method: "POST",
+        credentials: "include",
         body: JSON.stringify({
+            
             username: username,
             password: password
         }),
